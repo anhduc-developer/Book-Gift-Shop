@@ -1,4 +1,4 @@
-package dev.anhduc.bookgiftshop.domain.request;
+package dev.anhduc.bookgiftshop.domain.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;

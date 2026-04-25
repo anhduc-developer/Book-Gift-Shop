@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import dev.anhduc.bookgiftshop.domain.request.RestResponse;
+import dev.anhduc.bookgiftshop.domain.dto.response.RestResponse;
 
 @RestControllerAdvice
 public class GlobalException {

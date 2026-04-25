@@ -1,4 +1,4 @@
-package dev.anhduc.bookgiftshop.domain;
+package dev.anhduc.bookgiftshop.domain.entity;
 
 import java.time.Instant;
 
@@ -33,7 +33,6 @@ public class Order {
     private OrderStatusEnum status;
     private Instant createdAt;
     private Instant updatedAt;
-    private boolean deleted;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

@@ -1,4 +1,4 @@
-package dev.anhduc.bookgiftshop.domain;
+package dev.anhduc.bookgiftshop.domain.entity;
 
 import java.time.Instant;
 import java.util.List;
@@ -26,8 +26,8 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private long stockQuantity;
-    private long sold;
+    private Long stockQuantity;
+    private Long sold;
     private String shortDescription;
     private String detailDescription;
     private Instant createdAt;
@@ -46,7 +46,7 @@ public class Product {
     private Publisher publisher;
 
     @ManyToMany
-    @JoinTable(name = "book_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+    @JoinTable(name = "product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<Category> categories;
     @ManyToMany
     @JoinTable(name = "product_promotion", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "promotion_id"))

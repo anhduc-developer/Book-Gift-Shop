@@ -1,4 +1,4 @@
-package dev.anhduc.bookgiftshop.domain;
+package dev.anhduc.bookgiftshop.domain.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,23 +7,23 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table(name = "order_detail")
-public class OrderDetail {
+@Table(name = "cart_item")
+@Setter
+@Getter
+public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private long quantity;
-    private double unitPrice;
-    private double discountAmount;
-    private double finalPrice;
-
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
-
+    private Long quantity;
+    private double price;
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 }

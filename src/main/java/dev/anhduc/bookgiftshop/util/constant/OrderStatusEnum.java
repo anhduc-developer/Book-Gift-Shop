@@ -1,5 +1,5 @@
 package dev.anhduc.bookgiftshop.util.constant;
 
 public enum OrderStatusEnum {
-    PENDING, CONFIRMED, PROCESSING, SHIPPING, COMPLETED, CANCELLD;
+    PENDING, CONFIRMED, PROCESSING, SHIPPING, COMPLETED, CANCELLED;
 }

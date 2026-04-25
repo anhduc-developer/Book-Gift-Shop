@@ -1,6 +1,7 @@
-package dev.anhduc.bookgiftshop.domain;
+package dev.anhduc.bookgiftshop.domain.entity;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -15,22 +16,26 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "categories")
+@Table(name = "promotions")
 @Setter
 @Getter
-public class Category {
+public class Promotion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String description;
+
+    private Double discountPercent;
+
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+    private Boolean active;
     private Instant createdAt;
     private Instant updatedAt;
     private String createdBy;
     private String updatedBy;
-
     private boolean deleted;
-    @ManyToMany(mappedBy = "categories")
+    @ManyToMany(mappedBy = "promotions")
     @JsonIgnore
-    private List<Product> books;
+    private List<Product> products;
 }

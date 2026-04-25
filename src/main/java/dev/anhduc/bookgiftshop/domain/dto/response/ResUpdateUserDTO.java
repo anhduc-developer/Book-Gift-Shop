@@ -1,4 +1,4 @@
-package dev.anhduc.bookgiftshop.domain.response;
+package dev.anhduc.bookgiftshop.domain.dto.response;
 
 import java.time.Instant;
 
@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ResCreateUserDTO {
+public class ResUpdateUserDTO {
     private Long id;
     private String email;
     private String fullname;
@@ -16,5 +16,5 @@ public class ResCreateUserDTO {
     private String address;
     private String phoneNumber;
     private GenderEnum gender;
-    private Instant createdAt;
+    private Instant updatedAt;
 }

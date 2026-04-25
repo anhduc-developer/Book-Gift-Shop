@@ -1,8 +1,9 @@
-package dev.anhduc.bookgiftshop.domain;
+package dev.anhduc.bookgiftshop.domain.entity;
 
 import java.time.Instant;
 import java.util.List;
 
+import org.antlr.v4.runtime.misc.NotNull;
 import org.apache.catalina.security.SecurityUtil;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
