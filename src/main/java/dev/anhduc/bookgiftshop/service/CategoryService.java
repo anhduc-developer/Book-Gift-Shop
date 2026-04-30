@@ -7,12 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import dev.anhduc.bookgiftshop.domain.dto.response.ResCreateCategoryDTO;
-import dev.anhduc.bookgiftshop.domain.dto.response.ResUpdateCategoryDTO;
-import dev.anhduc.bookgiftshop.domain.dto.response.ResultPaginationDTO;
-import dev.anhduc.bookgiftshop.domain.entity.Category;
+import dev.anhduc.bookgiftshop.dto.response.ResCreateCategoryDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResUpdateCategoryDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResultPaginationDTO;
+import dev.anhduc.bookgiftshop.entity.Category;
+import dev.anhduc.bookgiftshop.exception.IdInvalidException;
 import dev.anhduc.bookgiftshop.repository.CategoryRepository;
-import dev.anhduc.bookgiftshop.util.errors.IdInvalidException;
 
 @Service
 public class CategoryService {

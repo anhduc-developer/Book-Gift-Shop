@@ -7,8 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import dev.anhduc.bookgiftshop.domain.dto.response.ResultPaginationDTO;
-import dev.anhduc.bookgiftshop.domain.entity.Role;
+import dev.anhduc.bookgiftshop.dto.response.ResultPaginationDTO;
+import dev.anhduc.bookgiftshop.entity.Role;
 import dev.anhduc.bookgiftshop.repository.RoleRepository;
 
 @Service

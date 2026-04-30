@@ -22,6 +22,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+	implementation("com.turkraft.springfilter:jpa:3.1.7")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -31,8 +34,7 @@ dependencies {
 	testAnnotationProcessor("org.projectlombok:lombok")
 	// runtimeOnly("com.mysql:mysql-connector-j")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
-	implementation("com.turkraft.springfilter:jpa:3.1.7")
-	implementation("org.springframework.boot:spring-boot-starter-validation")
+
     runtimeOnly("org.postgresql:postgresql")
 
 }

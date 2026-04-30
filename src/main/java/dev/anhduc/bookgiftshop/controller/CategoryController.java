@@ -5,13 +5,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.turkraft.springfilter.boot.Filter;
 
-import dev.anhduc.bookgiftshop.domain.dto.response.ResCreateCategoryDTO;
-import dev.anhduc.bookgiftshop.domain.dto.response.ResUpdateCategoryDTO;
-import dev.anhduc.bookgiftshop.domain.dto.response.ResultPaginationDTO;
-import dev.anhduc.bookgiftshop.domain.entity.Category;
+import dev.anhduc.bookgiftshop.dto.response.ResCreateCategoryDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResUpdateCategoryDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResultPaginationDTO;
+import dev.anhduc.bookgiftshop.entity.Category;
+import dev.anhduc.bookgiftshop.exception.IdInvalidException;
 import dev.anhduc.bookgiftshop.service.CategoryService;
-import dev.anhduc.bookgiftshop.util.annotation.ApiMessage;
-import dev.anhduc.bookgiftshop.util.errors.IdInvalidException;
+import dev.anhduc.bookgiftshop.utils.annotation.ApiMessage;
+import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -35,7 +36,7 @@ public class CategoryController {
 
     @PostMapping("/categories")
     @ApiMessage("Create New Category")
-    public ResponseEntity<ResCreateCategoryDTO> createCategory(@RequestBody Category category)
+    public ResponseEntity<ResCreateCategoryDTO> createCategory(@Valid @RequestBody Category category)
             throws IdInvalidException {
         Category result = this.categoryService.createCategory(category);
         return ResponseEntity.status(HttpStatus.CREATED).body(this.categoryService.convertResCreateCategoryDTO(result));
@@ -60,7 +61,7 @@ public class CategoryController {
 
     @PutMapping("/categories/{id}")
     @ApiMessage("Update Category By Id")
-    public ResponseEntity<ResUpdateCategoryDTO> updateCategoryById(@PathVariable("id") Long id,
+    public ResponseEntity<ResUpdateCategoryDTO> updateCategoryById(@Valid @PathVariable("id") Long id,
             @RequestBody Category requestCategory) throws IdInvalidException {
         Category category = this.categoryService.fetchCategoryById(id);
         if (category == null) {

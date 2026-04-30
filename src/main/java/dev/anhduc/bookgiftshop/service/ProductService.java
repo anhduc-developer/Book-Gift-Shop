@@ -5,9 +5,9 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import dev.anhduc.bookgiftshop.domain.dto.response.ResCreateProductDTO;
-import dev.anhduc.bookgiftshop.domain.entity.Author;
-import dev.anhduc.bookgiftshop.domain.entity.Product;
+import dev.anhduc.bookgiftshop.dto.response.ResCreateProductDTO;
+import dev.anhduc.bookgiftshop.entity.Author;
+import dev.anhduc.bookgiftshop.entity.Product;
 import dev.anhduc.bookgiftshop.repository.AuthorRepository;
 import dev.anhduc.bookgiftshop.repository.ProductRepository;
 

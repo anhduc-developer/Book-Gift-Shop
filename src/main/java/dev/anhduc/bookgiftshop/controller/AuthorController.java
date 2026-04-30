@@ -5,14 +5,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.turkraft.springfilter.boot.Filter;
 
-import dev.anhduc.bookgiftshop.domain.dto.response.ResAuthorDTO;
-import dev.anhduc.bookgiftshop.domain.dto.response.ResCreateAuthorDTO;
-import dev.anhduc.bookgiftshop.domain.dto.response.ResUpdateAuthorDTO;
-import dev.anhduc.bookgiftshop.domain.dto.response.ResultPaginationDTO;
-import dev.anhduc.bookgiftshop.domain.entity.Author;
+import dev.anhduc.bookgiftshop.dto.response.ResAuthorDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResCreateAuthorDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResUpdateAuthorDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResultPaginationDTO;
+import dev.anhduc.bookgiftshop.entity.Author;
+import dev.anhduc.bookgiftshop.exception.IdInvalidException;
 import dev.anhduc.bookgiftshop.service.AuthorService;
-import dev.anhduc.bookgiftshop.util.annotation.ApiMessage;
-import dev.anhduc.bookgiftshop.util.errors.IdInvalidException;
+import dev.anhduc.bookgiftshop.utils.annotation.ApiMessage;
+import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -36,7 +37,7 @@ public class AuthorController {
 
     @PostMapping("/authors")
     @ApiMessage("Create New Author")
-    public ResponseEntity<ResCreateAuthorDTO> createAuthor(@RequestBody Author author) {
+    public ResponseEntity<ResCreateAuthorDTO> createAuthor(@Valid @RequestBody Author author) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.authorService.creatAuthor(author));
     }
 
@@ -56,7 +57,7 @@ public class AuthorController {
 
     @PutMapping("/authors/{id}")
     @ApiMessage("Update Author By Id")
-    public ResponseEntity<ResUpdateAuthorDTO> updateAuthorById(@PathVariable("id") Long id,
+    public ResponseEntity<ResUpdateAuthorDTO> updateAuthorById(@Valid @PathVariable("id") Long id,
             @RequestBody Author requestAuthor) throws IdInvalidException {
         return ResponseEntity.ok().body(this.authorService.updateAuthor(id, requestAuthor));
     }

@@ -8,13 +8,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import dev.anhduc.bookgiftshop.domain.dto.response.ResAuthorDTO;
-import dev.anhduc.bookgiftshop.domain.dto.response.ResCreateAuthorDTO;
-import dev.anhduc.bookgiftshop.domain.dto.response.ResUpdateAuthorDTO;
-import dev.anhduc.bookgiftshop.domain.dto.response.ResultPaginationDTO;
-import dev.anhduc.bookgiftshop.domain.entity.Author;
+import dev.anhduc.bookgiftshop.dto.response.ResAuthorDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResCreateAuthorDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResUpdateAuthorDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResultPaginationDTO;
+import dev.anhduc.bookgiftshop.entity.Author;
+import dev.anhduc.bookgiftshop.exception.IdInvalidException;
 import dev.anhduc.bookgiftshop.repository.AuthorRepository;
-import dev.anhduc.bookgiftshop.util.errors.IdInvalidException;
 
 @Service
 public class AuthorService {

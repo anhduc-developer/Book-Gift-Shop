@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.turkraft.springfilter.boot.Filter;
 
-import dev.anhduc.bookgiftshop.domain.dto.response.ResultPaginationDTO;
-import dev.anhduc.bookgiftshop.domain.entity.Role;
+import dev.anhduc.bookgiftshop.dto.response.ResultPaginationDTO;
+import dev.anhduc.bookgiftshop.entity.Role;
+import dev.anhduc.bookgiftshop.exception.IdInvalidException;
 import dev.anhduc.bookgiftshop.service.RoleService;
-import dev.anhduc.bookgiftshop.util.annotation.ApiMessage;
-import dev.anhduc.bookgiftshop.util.errors.IdInvalidException;
+import dev.anhduc.bookgiftshop.utils.annotation.ApiMessage;
 import jakarta.validation.Valid;
 
 @RestController

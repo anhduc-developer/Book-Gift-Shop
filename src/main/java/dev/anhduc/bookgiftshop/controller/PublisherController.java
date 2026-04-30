@@ -5,16 +5,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.turkraft.springfilter.boot.Filter;
 
-import dev.anhduc.bookgiftshop.domain.dto.response.ResCreatePublisherDTO;
-import dev.anhduc.bookgiftshop.domain.dto.response.ResPublisherDTO;
-import dev.anhduc.bookgiftshop.domain.dto.response.ResUpdatePublisherDTO;
-import dev.anhduc.bookgiftshop.domain.dto.response.ResultPaginationDTO;
-import dev.anhduc.bookgiftshop.domain.entity.Publisher;
+import dev.anhduc.bookgiftshop.dto.response.ResCreatePublisherDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResPublisherDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResUpdatePublisherDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResultPaginationDTO;
+import dev.anhduc.bookgiftshop.entity.Publisher;
+import dev.anhduc.bookgiftshop.exception.IdInvalidException;
 import dev.anhduc.bookgiftshop.service.PublisherService;
-import dev.anhduc.bookgiftshop.util.annotation.ApiMessage;
-import dev.anhduc.bookgiftshop.util.errors.IdInvalidException;
-
-import org.apache.catalina.connector.Response;
+import dev.anhduc.bookgiftshop.utils.annotation.ApiMessage;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -37,7 +36,7 @@ public class PublisherController {
 
     @PostMapping("/publishers")
     @ApiMessage("Create New Publisher")
-    public ResponseEntity<ResCreatePublisherDTO> createPublishser(@RequestBody Publisher publisher)
+    public ResponseEntity<ResCreatePublisherDTO> createPublishser(@Valid @RequestBody Publisher publisher)
             throws IdInvalidException {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.publisherService.createPublisher(publisher));
     }
@@ -58,7 +57,7 @@ public class PublisherController {
 
     @PutMapping("/publishers/{id}")
     @ApiMessage("Update Publisher By Id")
-    public ResponseEntity<ResUpdatePublisherDTO> updatePublisherById(@PathVariable("id") Long id,
+    public ResponseEntity<ResUpdatePublisherDTO> updatePublisherById(@Valid @PathVariable("id") Long id,
             @RequestBody Publisher publisher) throws IdInvalidException {
         return ResponseEntity.ok().body(this.publisherService.updatePublisher(id, publisher));
     }

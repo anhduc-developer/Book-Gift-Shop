@@ -9,16 +9,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import dev.anhduc.bookgiftshop.domain.dto.response.ResCreateUserDTO;
-import dev.anhduc.bookgiftshop.domain.dto.response.ResUpdateUserDTO;
-import dev.anhduc.bookgiftshop.domain.dto.response.ResUserDTO;
-import dev.anhduc.bookgiftshop.domain.dto.response.ResultPaginationDTO;
-import dev.anhduc.bookgiftshop.domain.entity.Order;
-import dev.anhduc.bookgiftshop.domain.entity.User;
+import dev.anhduc.bookgiftshop.dto.response.ResCreateUserDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResUpdateUserDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResUserDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResultPaginationDTO;
+import dev.anhduc.bookgiftshop.entity.Order;
+import dev.anhduc.bookgiftshop.entity.User;
 import dev.anhduc.bookgiftshop.repository.OrderRepository;
 import dev.anhduc.bookgiftshop.repository.RoleRepository;
 import dev.anhduc.bookgiftshop.repository.UserRepository;
-import dev.anhduc.bookgiftshop.util.constant.OrderStatusEnum;
+import dev.anhduc.bookgiftshop.utils.constants.OrderStatusEnum;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -138,5 +138,10 @@ public class UserService {
                 .collect(Collectors.toList());
         result.setResult(listUsers);
         return result;
+    }
+
+    public User handleGetUserByUsername(String username) {
+        Optional<User> userOptional = this.userRepository.findByEmail(username);
+        return userOptional.isPresent() ? userOptional.get() : null;
     }
 }

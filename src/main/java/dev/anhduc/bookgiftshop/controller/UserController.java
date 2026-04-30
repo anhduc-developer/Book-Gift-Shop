@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.anhduc.bookgiftshop.domain.dto.response.ResCreateUserDTO;
-import dev.anhduc.bookgiftshop.domain.dto.response.ResUserDTO;
-import dev.anhduc.bookgiftshop.domain.dto.response.ResultPaginationDTO;
-import dev.anhduc.bookgiftshop.domain.entity.User;
+import dev.anhduc.bookgiftshop.dto.response.ResCreateUserDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResUserDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResultPaginationDTO;
+import dev.anhduc.bookgiftshop.entity.User;
+import dev.anhduc.bookgiftshop.exception.IdInvalidException;
 import dev.anhduc.bookgiftshop.service.UserService;
-import dev.anhduc.bookgiftshop.util.annotation.ApiMessage;
-import dev.anhduc.bookgiftshop.util.errors.IdInvalidException;
+import dev.anhduc.bookgiftshop.utils.annotation.ApiMessage;
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,7 +38,7 @@ public class UserController {
 
     @PostMapping("/users")
     @ApiMessage("Create New User")
-    public ResponseEntity<ResCreateUserDTO> createUser(@RequestBody User user) throws IdInvalidException {
+    public ResponseEntity<ResCreateUserDTO> createUser(@Valid @RequestBody User user) throws IdInvalidException {
         if (this.userService.isExistsByEmail(user.getEmail())) {
             throw new IdInvalidException("User đã tồn tại!");
         }
@@ -70,7 +71,7 @@ public class UserController {
 
     @PutMapping("/users/{id}")
     @ApiMessage("Update User By Id")
-    public ResponseEntity<?> updateUserById(@PathVariable("id") Long id, @RequestBody User requestUser) {
+    public ResponseEntity<?> updateUserById(@Valid @PathVariable("id") Long id, @RequestBody User requestUser) {
         if (requestUser.getPassword() != null && !requestUser.getPassword().isEmpty()) {
             requestUser.setPassword(passwordEncoder.encode(requestUser.getPassword()));
         }
