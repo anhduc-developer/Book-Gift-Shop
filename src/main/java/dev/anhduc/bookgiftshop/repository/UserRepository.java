@@ -12,4 +12,6 @@ import dev.anhduc.bookgiftshop.entity.User;
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
     Optional<User> findByEmail(String email);
+
+    User findByRefreshTokenAndEmail(String token, String email);
 }

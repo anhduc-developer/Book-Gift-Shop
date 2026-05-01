@@ -2,15 +2,33 @@ package dev.anhduc.bookgiftshop.utils;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.nimbusds.jose.util.Base64;
+
+import dev.anhduc.bookgiftshop.dto.response.ResLoginDTO;
+import dev.anhduc.bookgiftshop.exception.IdInvalidException;
 
 @Service
 public class SecurityUtil {
@@ -24,20 +42,92 @@ public class SecurityUtil {
     @Value("${duck.jwt.base64-secret}")
     private String jwtKey;
 
-    @Value("${duck.jwt.token-validity-in-seconds}")
-    private long jwtExpiration;
+    @Value("${duck.jwt.access-token-validity-in-seconds}")
+    private long accessTokenExpiration;
+    @Value("${duck.jwt.refresh-token-validity-in-seconds}")
+    private long refreshTokenExpiration;
 
-    public String createToken(Authentication authentication) {
+    public String createAccessToken(String email, ResLoginDTO.UserLogin dto) {
         Instant now = Instant.now(); // tính thời gian hết hạn kể từ bây giờ
-        Instant validity = now.plus(this.jwtExpiration, ChronoUnit.SECONDS); // thời gian hết hạn
+        Instant validity = now.plus(this.accessTokenExpiration, ChronoUnit.SECONDS); // thời gian hết hạn
+        List<String> listAuthority = new ArrayList<String>();
+        listAuthority.add("ROLE_USER_CREATE");
+        listAuthority.add("ROLE_USER_UPDATE");
         JwtClaimsSet claims = JwtClaimsSet.builder() // tạo payload
                 .issuedAt(now)
                 .expiresAt(validity)
-                .subject(authentication.getName())
-                .claim("duck", authentication)
+                .subject(email) // subject => email
+                .claim("user", dto)
+                .claim("permission", listAuthority) // miêu tả subject authentication bên trên
                 .build();
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build(); // Chứa thông tin thuật toán
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue(); // secret bên trong
                                                                                                      // encode
     }
+
+    public String createRefreshToken(String email, ResLoginDTO dto) {
+        Instant now = Instant.now(); // tính thời gian hết hạn kể từ bây giờ
+        Instant validity = now.plus(this.refreshTokenExpiration, ChronoUnit.SECONDS); // thời gian hết hạn
+        JwtClaimsSet claims = JwtClaimsSet.builder() // tạo payload
+                .issuedAt(now)
+                .expiresAt(validity)
+                .subject(email)
+                .claim("user", dto.getUser())
+                .build();
+        JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build(); // Chứa thông tin thuật toán
+        return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue(); // secret bên trong
+                                                                                                     // encode
+    }
+
+    private SecretKey getSecretKey() {
+        byte[] keyBytes = Base64.from(jwtKey).decode();
+        return new SecretKeySpec(keyBytes, 0, keyBytes.length, JWT_ALGORITHM.getName());
+    }
+
+    public Jwt checkValidRefreshToken(String token) {
+        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(
+                getSecretKey()).macAlgorithm(JWT_ALGORITHM).build();
+        try {
+            return jwtDecoder.decode(token);
+        } catch (Exception e) {
+            System.out.println(">>> Refresh Token error: " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid refresh token");
+        }
+    }
+
+    /**
+     * Get the login of the current user.
+     *
+     * @return the login of the current user.
+     */
+    public static Optional<String> getCurrentUserLogin() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        return Optional.ofNullable(extractPrincipal(securityContext.getAuthentication()));
+    }
+
+    private static String extractPrincipal(Authentication authentication) {
+        if (authentication == null) {
+            return null;
+        } else if (authentication.getPrincipal() instanceof UserDetails springSecurityUser) {
+            return springSecurityUser.getUsername();
+        } else if (authentication.getPrincipal() instanceof Jwt jwt) {
+            return jwt.getSubject();
+        } else if (authentication.getPrincipal() instanceof String s) {
+            return s;
+        }
+        return null;
+    }
+
+    /**
+     * Get the JWT of the current user.
+     *
+     * @return the JWT of the current user.
+     */
+    public static Optional<String> getCurrentUserJWT() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        return Optional.ofNullable(securityContext.getAuthentication())
+                .filter(authentication -> authentication.getCredentials() instanceof String)
+                .map(authentication -> (String) authentication.getCredentials());
+    }
+
 }

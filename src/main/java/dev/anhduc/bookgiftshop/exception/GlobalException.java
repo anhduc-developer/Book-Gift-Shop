@@ -12,14 +12,17 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 import dev.anhduc.bookgiftshop.dto.response.RestResponse;
 
 @RestControllerAdvice
 public class GlobalException {
+
     @ExceptionHandler(value = {
             UsernameNotFoundException.class,
-            BadCredentialsException.class
+            BadCredentialsException.class,
+            IdInvalidException.class
     })
 
     public ResponseEntity<RestResponse<Object>> handleIdException(Exception ex) {
@@ -27,7 +30,16 @@ public class GlobalException {
         res.setStatusCode(HttpStatus.BAD_REQUEST.value());
         res.setMessage(ex.getMessage());
         res.setError("Exception occurs...");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<RestResponse<Object>> handleResponseStatusException(ResponseStatusException ex) {
+        RestResponse<Object> res = new RestResponse<>();
+        res.setStatusCode(ex.getStatusCode().value());
+        res.setMessage(ex.getReason());
+        res.setError("Exception occurs...");
+        return ResponseEntity.status(ex.getStatusCode()).body(res);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

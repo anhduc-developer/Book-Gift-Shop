@@ -7,7 +7,9 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import dev.anhduc.bookgiftshop.dto.response.ResCreateUserDTO;
 import dev.anhduc.bookgiftshop.dto.response.ResUpdateUserDTO;
@@ -15,6 +17,7 @@ import dev.anhduc.bookgiftshop.dto.response.ResUserDTO;
 import dev.anhduc.bookgiftshop.dto.response.ResultPaginationDTO;
 import dev.anhduc.bookgiftshop.entity.Order;
 import dev.anhduc.bookgiftshop.entity.User;
+import dev.anhduc.bookgiftshop.exception.IdInvalidException;
 import dev.anhduc.bookgiftshop.repository.OrderRepository;
 import dev.anhduc.bookgiftshop.repository.RoleRepository;
 import dev.anhduc.bookgiftshop.repository.UserRepository;
@@ -143,5 +146,21 @@ public class UserService {
     public User handleGetUserByUsername(String username) {
         Optional<User> userOptional = this.userRepository.findByEmail(username);
         return userOptional.isPresent() ? userOptional.get() : null;
+    }
+
+    public void updateUserToken(String token, String email) {
+        Optional<User> userOptional = this.userRepository.findByEmail(email);
+        if (userOptional.isPresent()) {
+            User currentUser = userOptional.get();
+            currentUser.setRefreshToken(token);
+            this.userRepository.save(currentUser);
+        }
+    }
+
+    public void checkUserAndEmailValid(String token, String email) {
+        User user = userRepository.findByRefreshTokenAndEmail(token, email);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid refresh token");
+        }
     }
 }

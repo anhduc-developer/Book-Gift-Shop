@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dev.anhduc.bookgiftshop.utils.constants.GenderEnum;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -45,6 +46,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private GenderEnum gender;
     private int age;
+    @Column(columnDefinition = "TEXT")
+    private String refreshToken;
     private boolean deleted = false;
     private Instant createdAt;
     private String createdBy;
