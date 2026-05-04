@@ -61,8 +61,8 @@ public class CategoryController {
 
     @PutMapping("/categories/{id}")
     @ApiMessage("Update Category By Id")
-    public ResponseEntity<ResUpdateCategoryDTO> updateCategoryById(@Valid @PathVariable("id") Long id,
-            @RequestBody Category requestCategory) throws IdInvalidException {
+    public ResponseEntity<ResUpdateCategoryDTO> updateCategoryById(@PathVariable("id") Long id,
+            @Valid @RequestBody Category requestCategory) throws IdInvalidException {
         Category category = this.categoryService.fetchCategoryById(id);
         if (category == null) {
             throw new IdInvalidException("Category với id = " + id + " không tồn tại!");

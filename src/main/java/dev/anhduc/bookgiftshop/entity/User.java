@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import dev.anhduc.bookgiftshop.utils.SecurityUtil;
 import dev.anhduc.bookgiftshop.utils.constants.GenderEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,6 +41,7 @@ public class User {
     private String email;
     @NotBlank(message = "password không được để trống")
     private String password;
+    @NotBlank(message = "fullName không được để trống")
     private String fullName;
     private String address;
     private String phoneNumber;
@@ -67,11 +69,13 @@ public class User {
 
     @PrePersist
     public void handleBeforeCreate() {
+        this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
         this.createdAt = Instant.now();
     }
 
     @PreUpdate
     public void handleBeforeUpdate() {
+        this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
         this.updatedAt = Instant.now();
     }
 }

@@ -41,11 +41,16 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
             CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
+        String[] whiteList = {
+                "/",
+                "/api/v1/auth/login", "/storage/**",
+        };
         http
                 .csrf(csrf -> csrf.disable()) // REST API thường disable
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/api/v1/auth/login", "/api/v1/auth/refresh").permitAll()
+                        .requestMatchers(whiteList)
+                        .permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())
                         .authenticationEntryPoint(customAuthenticationEntryPoint))

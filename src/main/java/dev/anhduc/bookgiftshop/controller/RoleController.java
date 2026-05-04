@@ -20,6 +20,7 @@ import dev.anhduc.bookgiftshop.exception.IdInvalidException;
 import dev.anhduc.bookgiftshop.service.RoleService;
 import dev.anhduc.bookgiftshop.utils.annotation.ApiMessage;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -59,11 +60,15 @@ public class RoleController {
     @DeleteMapping("/roles/{id}")
     @ApiMessage("Delete A Role")
     public ResponseEntity<Void> deleteRoleById(@PathVariable("id") Long id) throws IdInvalidException {
-        Role role = this.roleService.fetchRoleById(id);
-        if (role == null) {
-            throw new IdInvalidException("Role với id = " + id + "  không tồn tại!");
-        }
         this.roleService.deleteRoleById(id);
         return ResponseEntity.ok().body(null);
+    }
+
+    @PutMapping("/roles/{id}")
+    @ApiMessage("Upder A Role")
+    public ResponseEntity<Role> updateRoleById(@PathVariable("id") Long id,
+            @Valid @RequestBody Role requestRole) throws IdInvalidException {
+        return ResponseEntity.ok().body(this.roleService.updateRoleById(id,
+                requestRole));
     }
 }

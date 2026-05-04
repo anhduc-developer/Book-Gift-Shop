@@ -14,8 +14,8 @@ public class ResUpdatePromotionDTO {
 
     private Double discountPercent;
 
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private Instant startDate;
+    private Instant endDate;
     private Boolean active;
     private Instant updatedAt;
     private String updatedBy;

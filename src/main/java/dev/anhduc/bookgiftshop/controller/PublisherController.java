@@ -57,8 +57,8 @@ public class PublisherController {
 
     @PutMapping("/publishers/{id}")
     @ApiMessage("Update Publisher By Id")
-    public ResponseEntity<ResUpdatePublisherDTO> updatePublisherById(@Valid @PathVariable("id") Long id,
-            @RequestBody Publisher publisher) throws IdInvalidException {
+    public ResponseEntity<ResUpdatePublisherDTO> updatePublisherById(@PathVariable("id") Long id,
+            @Valid @RequestBody Publisher publisher) throws IdInvalidException {
         return ResponseEntity.ok().body(this.publisherService.updatePublisher(id, publisher));
     }
 

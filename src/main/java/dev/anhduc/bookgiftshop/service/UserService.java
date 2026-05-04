@@ -17,7 +17,6 @@ import dev.anhduc.bookgiftshop.dto.response.ResUserDTO;
 import dev.anhduc.bookgiftshop.dto.response.ResultPaginationDTO;
 import dev.anhduc.bookgiftshop.entity.Order;
 import dev.anhduc.bookgiftshop.entity.User;
-import dev.anhduc.bookgiftshop.exception.IdInvalidException;
 import dev.anhduc.bookgiftshop.repository.OrderRepository;
 import dev.anhduc.bookgiftshop.repository.RoleRepository;
 import dev.anhduc.bookgiftshop.repository.UserRepository;
@@ -106,8 +105,9 @@ public class UserService {
         currentUser.setAddress(user.getAddress());
         currentUser.setAge(user.getAge());
         currentUser.setFullName(user.getFullName());
-        currentUser.setPhoneNumber(user.getPhoneNumber());
-        currentUser.setPassword(user.getPassword());
+        if (user.getPassword() != null && !user.getPassword().trim().isEmpty()) {
+            currentUser.setPassword(user.getPassword());
+        }
         currentUser.setGender(user.getGender());
         return this.userRepository.save(currentUser);
 

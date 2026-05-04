@@ -1,7 +1,6 @@
 package dev.anhduc.bookgiftshop.dto.response;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,12 +10,11 @@ import lombok.Setter;
 
 public class ResCreatePromotionDTO {
     private Long id;
+    private String code;
     private String name;
-
     private Double discountPercent;
-
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private Instant startDate;
+    private Instant endDate;
     private Boolean active;
     private Instant createdAt;
     private String createdBy;

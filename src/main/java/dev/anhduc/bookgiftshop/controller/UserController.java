@@ -71,7 +71,7 @@ public class UserController {
 
     @PutMapping("/users/{id}")
     @ApiMessage("Update User By Id")
-    public ResponseEntity<?> updateUserById(@Valid @PathVariable("id") Long id, @RequestBody User requestUser) {
+    public ResponseEntity<?> updateUserById(@PathVariable("id") Long id, @Valid @RequestBody User requestUser) {
         if (requestUser.getPassword() != null && !requestUser.getPassword().isEmpty()) {
             requestUser.setPassword(passwordEncoder.encode(requestUser.getPassword()));
         }

@@ -57,8 +57,8 @@ public class AuthorController {
 
     @PutMapping("/authors/{id}")
     @ApiMessage("Update Author By Id")
-    public ResponseEntity<ResUpdateAuthorDTO> updateAuthorById(@Valid @PathVariable("id") Long id,
-            @RequestBody Author requestAuthor) throws IdInvalidException {
+    public ResponseEntity<ResUpdateAuthorDTO> updateAuthorById(@PathVariable("id") Long id,
+            @Valid @RequestBody Author requestAuthor) throws IdInvalidException {
         return ResponseEntity.ok().body(this.authorService.updateAuthor(id, requestAuthor));
     }
 

@@ -1,6 +1,7 @@
 package dev.anhduc.bookgiftshop.utils;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
@@ -29,7 +30,7 @@ public class FormatRestResponse implements ResponseBodyAdvice<Object> {
         RestResponse<Object> res = new RestResponse<Object>();
         int status = servletResponse.getStatus();
         res.setStatusCode(status);
-        if (body instanceof String) {
+        if (body instanceof String || body instanceof Resource) {
             return body;
         }
         if (status >= 400) {
