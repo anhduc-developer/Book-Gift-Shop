@@ -6,9 +6,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.turkraft.springfilter.boot.Filter;
 
 import dev.anhduc.bookgiftshop.dto.request.RequestOrderDTO;
+import dev.anhduc.bookgiftshop.dto.request.RequestUpdateOrderDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResCreateOrderDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResOrderDTO;
 import dev.anhduc.bookgiftshop.dto.response.ResultPaginationDTO;
-import dev.anhduc.bookgiftshop.dto.response.orderDTO.ResCreateOrderDTO;
-import dev.anhduc.bookgiftshop.dto.response.orderDTO.ResOrderDTO;
 import dev.anhduc.bookgiftshop.entity.Cart;
 import dev.anhduc.bookgiftshop.entity.Order;
 import dev.anhduc.bookgiftshop.entity.User;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -66,9 +68,16 @@ public class OrderController {
     }
 
     @DeleteMapping("/orders/{id}")
-    @ApiMessage("Delete Order By Id")
+    @ApiMessage("Cancel Order By Id")
     public ResponseEntity<Void> deleteOrderById(@PathVariable("id") Long id) throws IdInvalidException {
         this.orderService.deleteOrderById(id);
         return ResponseEntity.ok().body(null);
+    }
+
+    @PutMapping("/orders/{id}")
+    @ApiMessage("Update Order By Id")
+    public ResponseEntity<?> updateOrderById(@PathVariable("id") Long id, @RequestBody RequestUpdateOrderDTO dto)
+            throws IdInvalidException {
+        return ResponseEntity.ok().body(this.orderService.updateOrderById(id, dto));
     }
 }

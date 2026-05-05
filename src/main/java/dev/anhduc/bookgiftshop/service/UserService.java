@@ -11,7 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import dev.anhduc.bookgiftshop.dto.request.RequestChangePasswordDTO;
+import dev.anhduc.bookgiftshop.dto.request.RequestRegiterDTO;
+import dev.anhduc.bookgiftshop.dto.request.RequestUpdateProfileUserDTO;
 import dev.anhduc.bookgiftshop.dto.response.ResCreateUserDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResRegisterUserDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResUpdateProfileUserDTO;
 import dev.anhduc.bookgiftshop.dto.response.ResUpdateUserDTO;
 import dev.anhduc.bookgiftshop.dto.response.ResUserDTO;
 import dev.anhduc.bookgiftshop.dto.response.ResultPaginationDTO;
@@ -176,5 +181,54 @@ public class UserService {
             throw new IdInvalidException("User not found");
         }
         return currentUser;
+    }
+
+    public ResRegisterUserDTO registerUser(RequestRegiterDTO dto) throws IdInvalidException {
+        User currentUser = this.handleGetUserByUsername(dto.getEmail());
+        if (currentUser != null) {
+            throw new IdInvalidException("User already exists!");
+        }
+        User user = new User();
+        user.setEmail(dto.getEmail());
+        user.setPassword(dto.getPassword());
+        user.setAge(dto.getAge());
+        user.setFullName(dto.getFullName());
+        user = this.userRepository.save(user);
+        ResRegisterUserDTO res = new ResRegisterUserDTO();
+        res.setEmail(user.getEmail());
+        res.setAge(user.getAge());
+        res.setPhoneNumber(user.getPhoneNumber());
+        return res;
+    }
+
+    public ResUpdateProfileUserDTO updateProfileUser(RequestUpdateProfileUserDTO dto) throws IdInvalidException {
+        String email = dto.getEmail();
+        User currentUser = this.handleGetUserByUsername(email);
+        if (currentUser == null) {
+            throw new IdInvalidException("User Not Found!");
+        }
+        currentUser.setAddress(dto.getAddress());
+        currentUser.setAge(dto.getAge());
+        currentUser.setAvatar(dto.getAvatar());
+        currentUser.setFullName(dto.getFullName());
+        currentUser.setGender(dto.getGender());
+        currentUser = this.userRepository.save(currentUser);
+        ResUpdateProfileUserDTO res = new ResUpdateProfileUserDTO();
+        res.setAddress(currentUser.getAddress());
+        res.setAge(currentUser.getAge());
+        res.setAvatar(currentUser.getAvatar());
+        res.setFullName(currentUser.getFullName());
+        res.setGender(currentUser.getGender());
+        return res;
+    }
+
+    public void changePassword(RequestChangePasswordDTO dto) throws IdInvalidException {
+        String email = dto.getEmail();
+        User currentUser = this.handleGetUserByUsername(email);
+        if (currentUser == null) {
+            throw new IdInvalidException("User Not Found!");
+        }
+        currentUser.setPassword(dto.getNewPassword());
+        this.userRepository.save(currentUser);
     }
 }

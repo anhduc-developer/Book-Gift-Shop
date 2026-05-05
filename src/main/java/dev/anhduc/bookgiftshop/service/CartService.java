@@ -37,7 +37,7 @@ public class CartService {
         }
         Cart cart = new Cart();
         cart.setUser(user);
-        return cart;
+        return this.cartRepository.save(cart);
     }
 
     public ResCartDTO convertCartDTO(Cart cart) {
@@ -46,25 +46,27 @@ public class CartService {
         ResCartDTO.ResProduct resProduct = new ResCartDTO.ResProduct();
         List<ResCartDTO.ResPromotionDTO> promotions = new ArrayList<>();
         List<ResCartDTO.ResCartItem> cartItems = new ArrayList<>();
-        cart.getCartItems().forEach(u -> {
-            ResCartDTO.ResCartItem resCartItem = new ResCartDTO.ResCartItem();
-            Product product = u.getProduct();
-            resProduct.setId(product.getId());
-            resProduct.setName(product.getName());
-            resProduct.setPrice(product.getPrice());
-            product.getPromotions().forEach(v -> {
-                ResCartDTO.ResPromotionDTO resPromotion = new ResCartDTO.ResPromotionDTO();
-                resPromotion.setCode(v.getCode());
-                resPromotion.setDiscountPercent(v.getDiscountPercent());
-                resPromotion.setName(v.getName());
-                promotions.add(resPromotion);
+        if (cart.getCartItems() != null) {
+            cart.getCartItems().forEach(u -> {
+                ResCartDTO.ResCartItem resCartItem = new ResCartDTO.ResCartItem();
+                Product product = u.getProduct();
+                resProduct.setId(product.getId());
+                resProduct.setName(product.getName());
+                resProduct.setPrice(product.getPrice());
+                product.getPromotions().forEach(v -> {
+                    ResCartDTO.ResPromotionDTO resPromotion = new ResCartDTO.ResPromotionDTO();
+                    resPromotion.setCode(v.getCode());
+                    resPromotion.setDiscountPercent(v.getDiscountPercent());
+                    resPromotion.setName(v.getName());
+                    promotions.add(resPromotion);
+                });
+                resProduct.setPromotions(promotions);
+                resCartItem.setId(u.getId());
+                resCartItem.setQuantity(u.getQuantity());
+                resCartItem.setProduct(resProduct);
+                cartItems.add(resCartItem);
             });
-            resProduct.setPromotions(promotions);
-            resCartItem.setId(u.getId());
-            resCartItem.setQuantity(u.getQuantity());
-            resCartItem.setProduct(resProduct);
-            cartItems.add(resCartItem);
-        });
+        }
         res.setCartItems(cartItems);
         return res;
     }

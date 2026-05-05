@@ -1,4 +1,4 @@
-package dev.anhduc.bookgiftshop.dto.response.orderDTO;
+package dev.anhduc.bookgiftshop.dto.response;
 
 import java.time.Instant;
 
@@ -6,9 +6,9 @@ import dev.anhduc.bookgiftshop.utils.constants.OrderStatusEnum;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
-public class ResCreateOrderDTO {
+@Setter
+public class ResUpdateDTO {
     private Long id;
     private double totalPrice;
     private double discount;
@@ -17,6 +17,5 @@ public class ResCreateOrderDTO {
     private String receiverAddress;
     private String receiverPhone;
     private OrderStatusEnum status;
-    private Instant createdAt;
-
+    private Instant updatedAt;
 }

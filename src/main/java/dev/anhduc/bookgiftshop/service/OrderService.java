@@ -1,5 +1,7 @@
 package dev.anhduc.bookgiftshop.service;
 
+import dev.anhduc.bookgiftshop.repository.CartItemRepository;
+import dev.anhduc.bookgiftshop.repository.CartRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,9 +13,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import dev.anhduc.bookgiftshop.dto.request.RequestOrderDTO;
+import dev.anhduc.bookgiftshop.dto.request.RequestUpdateOrderDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResCreateOrderDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResOrderDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResUpdateOrderDTO;
 import dev.anhduc.bookgiftshop.dto.response.ResultPaginationDTO;
-import dev.anhduc.bookgiftshop.dto.response.orderDTO.ResCreateOrderDTO;
-import dev.anhduc.bookgiftshop.dto.response.orderDTO.ResOrderDTO;
 import dev.anhduc.bookgiftshop.entity.Cart;
 import dev.anhduc.bookgiftshop.entity.CartItem;
 import dev.anhduc.bookgiftshop.entity.Order;
@@ -29,20 +33,27 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class OrderService {
+    private final CartItemRepository cartItemRepository;
+    private final CartRepository cartRepository;
+    private final CartService cartService;
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
     private final ProductRepository productRepository;
 
     public OrderService(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository,
-            ProductRepository productRepository) {
+            ProductRepository productRepository, CartService cartService, CartRepository cartRepository,
+            CartItemRepository cartItemRepository) {
         this.orderRepository = orderRepository;
         this.orderDetailRepository = orderDetailRepository;
         this.productRepository = productRepository;
+        this.cartService = cartService;
+        this.cartRepository = cartRepository;
+        this.cartItemRepository = cartItemRepository;
     }
 
     public ResCreateOrderDTO createOrder(User currentUser, Cart cart, RequestOrderDTO orderDTO) {
         List<CartItem> cartItems = cart.getCartItems();
-        List<OrderDetail> orderDetails = new ArrayList();
+        List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
         Order order = new Order();
         this.orderRepository.save(order);
         double totalAmount = 0;
@@ -94,6 +105,13 @@ public class OrderService {
         res.setReceiverPhone(order.getReceiverPhone());
         res.setStatus(order.getStatus());
         res.setCreatedAt(order.getCreatedAt());
+        if (cart.getCartItems() != null) {
+            cart.getCartItems().forEach(u -> {
+                this.cartItemRepository.delete(u);
+            });
+        }
+        cart.setCartItems(null);
+        this.cartRepository.save(cart);
         return res;
     }
 
@@ -118,6 +136,7 @@ public class OrderService {
         res.setStatus(order.getStatus());
         res.setCreatedAt(order.getCreatedAt());
         res.setUpdatedAt(order.getUpdatedAt());
+
         return res;
     }
 
@@ -154,5 +173,28 @@ public class OrderService {
         });
         this.productRepository.saveAll(products);
         order.setDeleted(true);
+    }
+
+    public ResUpdateOrderDTO updateOrderById(Long id, RequestUpdateOrderDTO dto) throws IdInvalidException {
+        Optional<Order> orderOptional = this.orderRepository.findById(id);
+        if (orderOptional.isEmpty()) {
+            throw new IdInvalidException("Order Not Found!");
+        }
+        Order orderInDB = orderOptional.get();
+        orderInDB.setStatus(dto.getStatus());
+        orderInDB = this.orderRepository.save(orderInDB);
+        ResUpdateOrderDTO res = new ResUpdateOrderDTO();
+        res.setId(orderInDB.getId());
+        res.setCreatedAt(orderInDB.getCreatedAt());
+        res.setDiscount(orderInDB.getDiscount());
+        res.setFinalPrice(orderInDB.getFinalPrice());
+        res.setReceiverAddress(orderInDB.getReceiverAddress());
+        res.setReceiverName(orderInDB.getReceiverName());
+        res.setReceiverPhone(orderInDB.getReceiverPhone());
+        res.setStatus(orderInDB.getStatus());
+        res.setTotalPrice(orderInDB.getTotalPrice());
+        res.setUpdatedAt(orderInDB.getUpdatedAt());
+        res.setUpdatedBy(orderInDB.getUpdatedBy());
+        return res;
     }
 }

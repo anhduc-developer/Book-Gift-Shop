@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import dev.anhduc.bookgiftshop.utils.SecurityUtil;
 import dev.anhduc.bookgiftshop.utils.constants.OrderStatusEnum;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -43,6 +44,7 @@ public class Order {
     private Instant createdAt;
     private Instant updatedAt;
     private boolean deleted;
+    private String updatedBy;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -60,5 +62,6 @@ public class Order {
     @PreUpdate
     public void beforeUpdate() {
         this.updatedAt = Instant.now();
+        this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
     }
 }

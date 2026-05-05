@@ -1,4 +1,4 @@
-package dev.anhduc.bookgiftshop.dto.response.orderDTO;
+package dev.anhduc.bookgiftshop.dto.response;
 
 import java.time.Instant;
 

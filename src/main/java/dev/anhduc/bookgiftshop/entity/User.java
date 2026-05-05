@@ -23,6 +23,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,6 +42,7 @@ public class User {
     @NotBlank(message = "email không được để trống")
     private String email;
     @NotBlank(message = "password không được để trống")
+    @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
     @NotBlank(message = "fullName không được để trống")
     private String fullName;
@@ -56,6 +58,7 @@ public class User {
     private String createdBy;
     private String updatedBy;
     private Instant updatedAt;
+    private String avatar;
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;

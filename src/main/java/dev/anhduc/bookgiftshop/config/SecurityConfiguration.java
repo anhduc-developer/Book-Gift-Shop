@@ -44,6 +44,7 @@ public class SecurityConfiguration {
         String[] whiteList = {
                 "/",
                 "/api/v1/auth/login", "/storage/**",
+                "/api/v1/users/**",
         };
         http
                 .csrf(csrf -> csrf.disable()) // REST API thường disable

@@ -28,7 +28,6 @@ import org.springframework.web.server.ResponseStatusException;
 import com.nimbusds.jose.util.Base64;
 
 import dev.anhduc.bookgiftshop.dto.response.ResLoginDTO;
-import dev.anhduc.bookgiftshop.exception.IdInvalidException;
 
 @Service
 public class SecurityUtil {

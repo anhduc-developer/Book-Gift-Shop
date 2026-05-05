@@ -1,5 +1,6 @@
 package dev.anhduc.bookgiftshop.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -8,10 +9,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.anhduc.bookgiftshop.dto.request.RequestChangePasswordDTO;
 import dev.anhduc.bookgiftshop.dto.request.RequestLoginDTO;
 import dev.anhduc.bookgiftshop.dto.response.ResLoginDTO;
 import dev.anhduc.bookgiftshop.entity.User;
@@ -32,12 +35,14 @@ public class AuthController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final SecurityUtil securityUtil;
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder, SecurityUtil securityUtil,
-            UserService userService) {
+            UserService userService, PasswordEncoder passwordEncoder) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.securityUtil = securityUtil;
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Value("${duck.jwt.refresh-token-validity-in-seconds}")
@@ -157,5 +162,22 @@ public class AuthController {
                 .maxAge(0)
                 .build();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, deleteSpringCookie.toString()).body(null);
+    }
+
+    @PostMapping("/auth/change-password")
+    @ApiMessage("Change Password")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody RequestChangePasswordDTO dto)
+            throws IdInvalidException {
+        // Nạp input gồm username/password vào Security
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                dto.getEmail(), dto.getPassword());
+        // Xác thực người dùng => cần function loadUserByUsername
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        if (dto.getNewPassword().equals(dto.getPassword())) {
+            throw new IdInvalidException("Mật khẩu mới phải khác mật khẩu cũ!");
+        }
+        dto.setNewPassword(this.passwordEncoder.encode(dto.getNewPassword()));
+        this.userService.changePassword(dto);
+        return ResponseEntity.ok().body("Change password successed!");
     }
 }
