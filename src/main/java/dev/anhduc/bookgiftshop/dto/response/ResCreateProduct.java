@@ -18,6 +18,7 @@ public class ResCreateProduct {
     private Instant createdAt;
     private String createdBy;
     private String photo;
+    private double price;
     private List<String> authors;
     private String publisher;
     private List<String> categories;

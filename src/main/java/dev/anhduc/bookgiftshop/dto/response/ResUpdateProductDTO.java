@@ -17,6 +17,7 @@ public class ResUpdateProductDTO {
     private String detailDescription;
     private Instant updatedAt;
     private String updatedBy;
+    private double price;
     private String photo;
     private List<String> authors;
     private String publisher;

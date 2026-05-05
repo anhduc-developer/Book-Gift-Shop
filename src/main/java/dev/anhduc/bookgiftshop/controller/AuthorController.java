@@ -35,34 +35,34 @@ public class AuthorController {
         this.authorService = authorService;
     }
 
-    @PostMapping("/authors")
+    @PostMapping("/admin/authors")
     @ApiMessage("Create New Author")
     public ResponseEntity<ResCreateAuthorDTO> createAuthor(@Valid @RequestBody Author author) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.authorService.creatAuthor(author));
     }
 
-    @GetMapping("/authors/{id}")
+    @GetMapping("/admin/authors/{id}")
     @ApiMessage("Fetch Author By Id")
     public ResponseEntity<ResAuthorDTO> fetchAuthorById(@PathVariable("id") Long id) throws IdInvalidException {
         Author author = this.authorService.fetchAuthorById(id);
         return ResponseEntity.ok().body(this.authorService.convertAuthorDTO(author));
     }
 
-    @GetMapping("/authors")
+    @GetMapping("/admin/authors")
     @ApiMessage("Fetch All Authors")
     public ResponseEntity<ResultPaginationDTO> fetchAllAuthor(@Filter Specification<Author> specification,
             Pageable pageable) {
         return ResponseEntity.ok().body(this.authorService.fetchAllAuthors(specification, pageable));
     }
 
-    @PutMapping("/authors/{id}")
+    @PutMapping("/admin/authors/{id}")
     @ApiMessage("Update Author By Id")
     public ResponseEntity<ResUpdateAuthorDTO> updateAuthorById(@PathVariable("id") Long id,
             @Valid @RequestBody Author requestAuthor) throws IdInvalidException {
         return ResponseEntity.ok().body(this.authorService.updateAuthor(id, requestAuthor));
     }
 
-    @DeleteMapping("/authors/{id}")
+    @DeleteMapping("/admin/authors/{id}")
     @ApiMessage("Delete Author By Id")
     public ResponseEntity<Void> deleteAuthorById(@PathVariable("id") Long id) throws IdInvalidException {
         this.authorService.deleteAuthorById(id);

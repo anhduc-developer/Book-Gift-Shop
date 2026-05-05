@@ -37,6 +37,7 @@ public class Product {
     @NotNull(message = "Số lượng không được để trống")
     @Min(0)
     private Long stockQuantity;
+    private double price;
     private Long sold;
     private String shortDescription;
     private String detailDescription;

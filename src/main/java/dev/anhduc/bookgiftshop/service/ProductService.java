@@ -1,11 +1,9 @@
 package dev.anhduc.bookgiftshop.service;
 
-import java.lang.StackWalker.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.checkerframework.checker.units.qual.s;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -79,6 +77,7 @@ public class ProductService {
         res.setCreatedAt(savedProduct.getCreatedAt());
         res.setCreatedBy(savedProduct.getCreatedBy());
         res.setStockQuantity(savedProduct.getStockQuantity());
+        res.setPrice(savedProduct.getPrice());
         if (savedProduct.getPublisher() != null) {
             res.setPublisher(savedProduct.getPublisher().getName());
         }
@@ -147,6 +146,7 @@ public class ProductService {
         }
         Product savedProduct = this.productRepository.save(requestProduct);
         ResUpdateProductDTO res = new ResUpdateProductDTO();
+        res.setPrice(savedProduct.getPrice());
         res.setId(savedProduct.getId());
         res.setName(savedProduct.getName());
         res.setDetailDescription(savedProduct.getDetailDescription());

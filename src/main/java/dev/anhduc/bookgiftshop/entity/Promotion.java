@@ -32,7 +32,7 @@ public class Promotion {
     private String name;
     @Min(value = 0, message = "Discount >= 0")
     @Max(value = 100, message = "Discount <= 100")
-    private Double discountPercent;
+    private double discountPercent;
     @NotBlank(message = "Code không được để trống")
     private String code;
     private Instant startDate;

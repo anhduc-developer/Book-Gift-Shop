@@ -17,9 +17,11 @@ import dev.anhduc.bookgiftshop.dto.response.ResUserDTO;
 import dev.anhduc.bookgiftshop.dto.response.ResultPaginationDTO;
 import dev.anhduc.bookgiftshop.entity.Order;
 import dev.anhduc.bookgiftshop.entity.User;
+import dev.anhduc.bookgiftshop.exception.IdInvalidException;
 import dev.anhduc.bookgiftshop.repository.OrderRepository;
 import dev.anhduc.bookgiftshop.repository.RoleRepository;
 import dev.anhduc.bookgiftshop.repository.UserRepository;
+import dev.anhduc.bookgiftshop.utils.SecurityUtil;
 import dev.anhduc.bookgiftshop.utils.constants.OrderStatusEnum;
 import jakarta.transaction.Transactional;
 
@@ -162,5 +164,17 @@ public class UserService {
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid refresh token");
         }
+    }
+
+    public User getCurrentUserLogin() throws IdInvalidException {
+        String email = SecurityUtil.getCurrentUserLogin()
+                .orElseThrow(() -> new IdInvalidException("User not logged in"));
+
+        User currentUser = this.handleGetUserByUsername(email);
+
+        if (currentUser == null) {
+            throw new IdInvalidException("User not found");
+        }
+        return currentUser;
     }
 }
