@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.turkraft.springfilter.boot.Filter;
 
 import dev.anhduc.bookgiftshop.dto.response.ResCreateProduct;
+import dev.anhduc.bookgiftshop.dto.response.ResProductDTO;
 import dev.anhduc.bookgiftshop.dto.response.ResUpdateProductDTO;
 import dev.anhduc.bookgiftshop.dto.response.ResultPaginationDTO;
+import dev.anhduc.bookgiftshop.dto.response.ResCartDTO.ResProduct;
 import dev.anhduc.bookgiftshop.entity.Product;
 import dev.anhduc.bookgiftshop.exception.IdInvalidException;
 import dev.anhduc.bookgiftshop.service.ProductService;
@@ -49,7 +51,7 @@ public class ProductController {
 
     @GetMapping("/products/{id}")
     @ApiMessage("Fetch Product By Id")
-    public ResponseEntity<Product> fetchProductById(@PathVariable("id") Long id) throws IdInvalidException {
+    public ResponseEntity<ResProductDTO> fetchProductById(@PathVariable("id") Long id) throws IdInvalidException {
         return ResponseEntity.ok().body(this.productService.fetchProductById(id));
     }
 

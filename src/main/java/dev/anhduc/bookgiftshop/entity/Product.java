@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dev.anhduc.bookgiftshop.utils.SecurityUtil;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -47,9 +48,10 @@ public class Product {
     private String updatedBy;
     private boolean deleted;
     private String photo;
-    @ManyToMany(mappedBy = "products")
-    @JsonIgnore
+
+    @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
     private List<Author> authors;
+
     @NotNull(message = "Phải chọn nhà xuất bản")
     @ManyToOne
     @JoinColumn(name = "publisher_id")

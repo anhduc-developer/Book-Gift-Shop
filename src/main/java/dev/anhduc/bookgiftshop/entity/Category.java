@@ -39,6 +39,10 @@ public class Category {
     @JsonIgnore
     private List<Product> products;
 
+    @ManyToMany(mappedBy = "categories")
+    @JsonIgnore
+    private List<Subscriber> subscribers;
+
     @PrePersist
     public void handleBeforeCreate() {
         this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";

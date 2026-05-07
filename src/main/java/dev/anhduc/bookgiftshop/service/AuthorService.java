@@ -1,5 +1,6 @@
 package dev.anhduc.bookgiftshop.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,15 +14,19 @@ import dev.anhduc.bookgiftshop.dto.response.ResCreateAuthorDTO;
 import dev.anhduc.bookgiftshop.dto.response.ResUpdateAuthorDTO;
 import dev.anhduc.bookgiftshop.dto.response.ResultPaginationDTO;
 import dev.anhduc.bookgiftshop.entity.Author;
+import dev.anhduc.bookgiftshop.entity.Product;
 import dev.anhduc.bookgiftshop.exception.IdInvalidException;
 import dev.anhduc.bookgiftshop.repository.AuthorRepository;
+import dev.anhduc.bookgiftshop.repository.ProductRepository;
 
 @Service
 public class AuthorService {
     private final AuthorRepository authorRepository;
+    private final ProductRepository productRepository;
 
-    public AuthorService(AuthorRepository authorRepository) {
+    public AuthorService(AuthorRepository authorRepository, ProductRepository productRepository) {
         this.authorRepository = authorRepository;
+        this.productRepository = productRepository;
     }
 
     public ResCreateAuthorDTO creatAuthor(Author author) {
@@ -73,6 +78,17 @@ public class AuthorService {
         result.setDeleted(author.isDeleted());
         result.setUpdatedAt(author.getUpdatedAt());
         result.setUpdatedBy(author.getUpdatedBy());
+        List<Product> products = this.productRepository.findByAuthors(author);
+        if (products != null) {
+            List<ResAuthorDTO.ProductDTO> res = new ArrayList<ResAuthorDTO.ProductDTO>();
+            products.forEach(u -> {
+                ResAuthorDTO.ProductDTO ans = new ResAuthorDTO.ProductDTO();
+                ans.setId(u.getId());
+                ans.setName(u.getName());
+                res.add(ans);
+            });
+            result.setProducts(res);
+        }
         return result;
     }
 

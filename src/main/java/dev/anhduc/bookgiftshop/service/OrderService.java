@@ -80,6 +80,10 @@ public class OrderService {
             orderDetail.setFinalPrice(unitPrice - discountProduct);
             this.orderDetailRepository.save(orderDetail);
             orderDetails.add(orderDetail);
+            Product product = cartItem.getProduct();
+            product.setSold(product.getSold() + cartItem.getQuantity());
+            product.setStockQuantity(product.getStockQuantity() - cartItem.getQuantity());
+            this.productRepository.save(product);
         }
         order.setOrderDetails(orderDetails);
         finalAmount = totalAmount - discount;
@@ -168,6 +172,7 @@ public class OrderService {
             Product product = u.getProduct();
             Product productDB = this.productRepository.findById(product.getId()).get();
             productDB.setStockQuantity(productDB.getStockQuantity() + u.getQuantity());
+            productDB.setSold(productDB.getSold() - u.getQuantity());
             this.orderDetailRepository.delete(u);
             products.add(productDB);
         });

@@ -1,6 +1,7 @@
 package dev.anhduc.bookgiftshop.dto.response;
 
 import java.time.Instant;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,5 +20,12 @@ public class ResAuthorDTO {
     private Instant updatedAt;
     private String createdBy;
     private String updatedBy;
+    private List<ProductDTO> products;
 
+    @Setter
+    @Getter
+    public static class ProductDTO {
+        private Long id;
+        private String name;
+    }
 }
